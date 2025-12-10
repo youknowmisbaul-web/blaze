@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ĐᴀDĐʏCᴀʟʟIɴ₲</title>
+  <title>SHADOW CLON - V2 | ITACHI-XT</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -112,10 +112,10 @@
   <!-- LOGIN PAGE -->
   <div id="loginPage" class="login-container">
     <div class="login-box glass">
-      <h1 class="login-title">ĐᴀDĐʏCᴀʟʟIɴ₲</h1>
+      <h1 class="login-title">SHADOW CLON - V2</h1>
       <p class="login-subtitle"></p>
       <form id="loginForm">
-        <input type="password" id="keyInput" class="login-input" placeholder="" autocomplete="off">
+        <input type="password" id="keyInput" class="login-input" placeholder="ITACHIIXT" autocomplete="off">
         <div id="loginError" class="login-error"></div>
         <button type="submit" id="loginBtn" class="login-btn">UNLOCK</button>
       </form>
@@ -126,11 +126,11 @@
   <!-- DASHBOARD -->
   <div id="dashboard" class="container dashboard">
     <header class="header glass">
-      <h1>ĐᴀDĐʏCᴀʟʟIɴ₲</h1>
-      <button class="logout-btn" id="logoutBtn">㊙</button>
+      <h1>SHADOW CLON - V2</h1>
+      <button class="logout-btn" id="logoutBtn">㊰</button>
     </header>
     <div class="top-bar glass">
-      <div class="period-box">PERIOD JACKPOT NO - <span id="period">--</span></div>
+      <div class="period-box">PERIOD SHADOW NO - <span id="period">--</span></div>
       <div class="timer-box" id="timer">--</div>
     </div>
 
@@ -156,7 +156,7 @@
     </section>
 
     <section class="prediction-section glass">
-      <p class="prediction-label">DADDYCALLING - PLATFORM</p>
+      <p class="prediction-label">SHADOW CLON - PLATFOM</p>
 
       <div class="bigtext-container">
         <div id="prediction" class="bigtext big">
@@ -206,6 +206,16 @@ const HISTORY_API = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssu
 let historyData = [];
 let lastSavedPeriod = null;
 
+// Generate unique device ID
+function getDeviceId() {
+  let deviceId = localStorage.getItem('deviceId');
+  if (!deviceId) {
+    deviceId = 'device_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+    localStorage.setItem('deviceId', deviceId);
+  }
+  return deviceId;
+}
+
 // Check if already logged in
 function checkAuth() {
   const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -214,7 +224,7 @@ function checkAuth() {
   }
 }
 
-// Login with Firebase
+// Login with Firebase - One key per device
 document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const key = document.getElementById('keyInput').value.trim().toUpperCase();
@@ -225,6 +235,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   btn.disabled = true;
   errorDiv.textContent = '';
   
+  const deviceId = getDeviceId();
+  
   // Check key in Firebase
   firebase.database().ref('keys/' + key).once('value')
     .then(snapshot => {
@@ -232,27 +244,45 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         const keyData = snapshot.val();
         const now = Date.now();
         
-        if (keyData.active && keyData.expiresAt > now) {
-          // Valid key - clear all data on login
-          localStorage.removeItem('historyData');
-          localStorage.removeItem('period');
-          localStorage.removeItem('side');
-          localStorage.removeItem('num');
-          historyData = [];
-          
-          localStorage.setItem('isLoggedIn', 'true');
-          showDashboard();
-        } else if (!keyData.active) {
-          errorDiv.textContent = 'NOT USE KEY BYY - ITACHIIXT';
+        if (!keyData.active) {
+          errorDiv.textContent = '" KEY IS INACTIVE "';
           btn.textContent = 'UNLOCK';
           btn.disabled = false;
-        } else {
-          errorDiv.textContent = 'NOT USE KEY BYY - ITACHIIXT';
-          btn.textContent = 'UNLOCK';
-          btn.disabled = false;
+          return;
         }
+        
+        if (keyData.expiresAt <= now) {
+          errorDiv.textContent = '" KEY HAS EXPIRED "';
+          btn.textContent = 'UNLOCK';
+          btn.disabled = false;
+          return;
+        }
+        
+        // Check device binding - one key per device
+        if (keyData.deviceId && keyData.deviceId !== deviceId) {
+          errorDiv.textContent = '" KEY IS ALREADY USE "';
+          btn.textContent = 'UNLOCK';
+          btn.disabled = false;
+          return;
+        }
+        
+        // Bind key to device if not already bound
+        if (!keyData.deviceId) {
+          firebase.database().ref('keys/' + key).update({ deviceId: deviceId });
+        }
+        
+        // Valid key - clear all data on login
+        localStorage.removeItem('historyData');
+        localStorage.removeItem('period');
+        localStorage.removeItem('side');
+        localStorage.removeItem('num');
+        historyData = [];
+        
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('loginKey', key);
+        showDashboard();
       } else {
-        errorDiv.textContent = 'NOT USE KEY BYY - ITACHIIXT';
+        errorDiv.textContent = 'Invalid key';
         btn.textContent = 'UNLOCK';
         btn.disabled = false;
       }
@@ -268,6 +298,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 // Logout
 document.getElementById('logoutBtn').addEventListener('click', function() {
   localStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('loginKey');
+  localStorage.removeItem('historyData');
+  localStorage.removeItem('period');
+  localStorage.removeItem('side');
+  localStorage.removeItem('num');
   location.reload();
 });
 
@@ -296,7 +331,7 @@ function initDashboard() {
   // Start intervals
   setInterval(updateTimer, 1000);
   setInterval(autoPredict, 1000);
-  setInterval(checkResults, 10000);
+  setInterval(checkResults, 1000);
   
   updateTimer();
   autoPredict();
