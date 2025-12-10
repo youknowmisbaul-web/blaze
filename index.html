@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ITACHI DEATH - XT</title>
+  <title>ĐᴀDĐʏCᴀʟʟIɴ₲</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -44,7 +44,7 @@
     .login-btn:hover{opacity:0.9;transform:scale(1.02);}
     .login-btn:disabled{opacity:0.5;cursor:not-allowed;}
     .login-footer{text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:24px;}
-    .login-error{text-align:center;color:#ef4444;font-size:0.85rem;margin-top:16px;display:none;}
+    .login-error{color:#ef4444;text-align:center;font-size:0.85rem;margin-top:12px;}
     
     /* Dashboard */
     .dashboard{display:none;}
@@ -68,7 +68,6 @@
     
     .prediction-section{padding:24px;margin-bottom:20px;text-align:center;}
     .prediction-label{font-size:0.9rem;color:rgba(255,255,255,0.7);margin-bottom:16px;}
-    .wait-msg{font-size:0.9rem;color:#ffd700;margin-bottom:10px;font-weight:bold;}
     .bigtext-container{width:160px;height:160px;margin:0 auto 20px;position:relative;}
     .bigtext{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:clamp(3rem,10vw,4rem);font-weight:900;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);box-shadow:0 0 40px rgba(255,255,255,0.2);overflow:hidden;position:relative;}
     .bigtext.big{color:#ff1493;text-shadow:0 0 30px rgba(255,20,147,0.8);}
@@ -97,8 +96,6 @@
     .status-pending{color:#ffd700;font-weight:bold;animation:pulse 1.5s infinite;}
     .status-win{color:#22c55e;font-weight:bold;text-shadow:0 0 10px rgba(34,197,94,0.5);}
     .status-loss{color:#ef4444;font-weight:bold;text-shadow:0 0 10px rgba(239,68,68,0.5);}
-    .predict-big{color:#f59e0b;font-weight:600;}
-    .predict-small{color:#3b82f6;font-weight:600;}
     @keyframes scaleIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
     @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
     ::-webkit-scrollbar{width:6px;}
@@ -115,22 +112,22 @@
   <!-- LOGIN PAGE -->
   <div id="loginPage" class="login-container">
     <div class="login-box glass">
-      <h1 class="login-title">ITACHI DEATH - V2</h1>
-      <p class="login-subtitle">Enter your access key to continue</p>
+      <h1 class="login-title">ĐᴀDĐʏCᴀʟʟIɴ₲</h1>
+      <p class="login-subtitle"></p>
       <form id="loginForm">
-        <input type="password" id="keyInput" class="login-input" placeholder="Enter Access Key" autocomplete="off">
+        <input type="password" id="keyInput" class="login-input" placeholder="" autocomplete="off">
+        <div id="loginError" class="login-error"></div>
         <button type="submit" id="loginBtn" class="login-btn">UNLOCK</button>
-        <p id="loginError" class="login-error"></p>
       </form>
-      <p class="login-footer">POWERED BY - ITACHIIXT TEAM</p>
+      <p class="login-footer">TELEGRAM USERNAME BYY - ITACHIIXT</p>
     </div>
   </div>
 
   <!-- DASHBOARD -->
   <div id="dashboard" class="container dashboard">
     <header class="header glass">
-      <h1>ITACHI DEATH - TEAM</h1>
-      <button class="logout-btn" id="logoutBtn">⏻</button>
+      <h1>ĐᴀDĐʏCᴀʟʟIɴ₲</h1>
+      <button class="logout-btn" id="logoutBtn">㊙</button>
     </header>
     <div class="top-bar glass">
       <div class="period-box">PERIOD JACKPOT NO - <span id="period">--</span></div>
@@ -140,7 +137,7 @@
     <section class="stats-section glass">
       <div class="stats-grid">
         <div class="stat-item">
-          <span class="stat-label">TOTAL</span>
+          <span class="stat-label">TOTO</span>
           <span class="stat-value total" id="totalCount">0</span>
         </div>
         <div class="stat-item">
@@ -159,8 +156,7 @@
     </section>
 
     <section class="prediction-section glass">
-      <p class="prediction-label">ITACHI DEATH - PLATFORM</p>
-      <p id="waitmsg" class="wait-msg"></p>
+      <p class="prediction-label">DADDYCALLING - PLATFORM</p>
 
       <div class="bigtext-container">
         <div id="prediction" class="bigtext big">
@@ -184,7 +180,7 @@
         <div>PERIOD NO</div>
         <div>PREDICT</div>
         <div>JACKPOT</div>
-        <div>STATUS</div>
+        <div>STATUT</div>
       </div>
       <div id="historyBox" class="history-box"></div>
     </section>
@@ -199,77 +195,16 @@ const firebaseConfig = {
   storageBucket: "itachiixt.firebasestorage.app",
   messagingSenderId: "909234170582",
   appId: "1:909234170582:android:9618b2e57396a43f643777",
-  measurementId: "G-MH7LC1R7C9",
   databaseURL: "https://itachiixt-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
 
 const HISTORY_API = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
 
 let historyData = [];
 let lastSavedPeriod = null;
-
-// Generate unique device ID
-function getDeviceId() {
-  let deviceId = localStorage.getItem('deviceId');
-  if (!deviceId) {
-    deviceId = 'device_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
-    localStorage.setItem('deviceId', deviceId);
-  }
-  return deviceId;
-}
-
-// Validate key with Firebase
-async function validateKey(key) {
-  try {
-    const snapshot = await database.ref('keys/' + key).once('value');
-    
-    if (!snapshot.exists()) {
-      return { valid: false, message: 'Invalid key. Contact ITACHIIXT for access.' };
-    }
-    
-    const keyData = snapshot.val();
-    const deviceId = getDeviceId();
-    
-    // Check if key is active
-    if (keyData.active === false) {
-      return { valid: false, message: 'This key has been deactivated.' };
-    }
-    
-    // Check expiration
-    if (keyData.expiresAt && Date.now() > keyData.expiresAt) {
-      return { valid: false, message: 'This key has expired.' };
-    }
-    
-    // Check device binding (one device per key)
-    if (keyData.deviceId && keyData.deviceId !== deviceId) {
-      return { valid: false, message: 'This key is already registered to another device.' };
-    }
-    
-    // Bind device if not already bound
-    if (!keyData.deviceId) {
-      await database.ref('keys/' + key).update({
-        deviceId: deviceId,
-        lastLogin: Date.now()
-      });
-    } else {
-      // Update last login
-      await database.ref('keys/' + key + '/lastLogin').set(Date.now());
-    }
-    
-    return { valid: true, message: 'Access granted!' };
-  } catch (error) {
-    console.error('Firebase validation error:', error);
-    // Fallback to local validation if Firebase fails
-    if (key === '') {
-      return { valid: true, message: 'Access granted (offline mode)' };
-    }
-    return { valid: false, message: 'Connection error. Please try again.' };
-  }
-}
 
 // Check if already logged in
 function checkAuth() {
@@ -279,52 +214,60 @@ function checkAuth() {
   }
 }
 
-// Login
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
+// Login with Firebase
+document.getElementById('loginForm').addEventListener('submit', function(e) {
   e.preventDefault();
   const key = document.getElementById('keyInput').value.trim().toUpperCase();
   const btn = document.getElementById('loginBtn');
-  const errorEl = document.getElementById('loginError');
-  
-  if (!key) {
-    errorEl.textContent = '';
-    errorEl.style.display = 'block';
-    return;
-  }
+  const errorDiv = document.getElementById('loginError');
   
   btn.textContent = 'VERIFYING';
   btn.disabled = true;
-  errorEl.style.display = 'none';
+  errorDiv.textContent = '';
   
-  const result = await validateKey(key);
-  
-  if (result.valid) {
-    // Clear all data on login
-    localStorage.removeItem('historyData');
-    localStorage.removeItem('period');
-    localStorage.removeItem('side');
-    localStorage.removeItem('num');
-    historyData = [];
-    
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('accessKey', key);
-    showDashboard();
-  } else {
-    errorEl.textContent = result.message;
-    errorEl.style.display = 'block';
-    btn.textContent = 'UNLOCK';
-    btn.disabled = false;
-  }
+  // Check key in Firebase
+  firebase.database().ref('keys/' + key).once('value')
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        const keyData = snapshot.val();
+        const now = Date.now();
+        
+        if (keyData.active && keyData.expiresAt > now) {
+          // Valid key - clear all data on login
+          localStorage.removeItem('historyData');
+          localStorage.removeItem('period');
+          localStorage.removeItem('side');
+          localStorage.removeItem('num');
+          historyData = [];
+          
+          localStorage.setItem('isLoggedIn', 'true');
+          showDashboard();
+        } else if (!keyData.active) {
+          errorDiv.textContent = 'NOT USE KEY BYY - ITACHIIXT';
+          btn.textContent = 'UNLOCK';
+          btn.disabled = false;
+        } else {
+          errorDiv.textContent = 'NOT USE KEY BYY - ITACHIIXT';
+          btn.textContent = 'UNLOCK';
+          btn.disabled = false;
+        }
+      } else {
+        errorDiv.textContent = 'NOT USE KEY BYY - ITACHIIXT';
+        btn.textContent = 'UNLOCK';
+        btn.disabled = false;
+      }
+    })
+    .catch(error => {
+      console.error('Firebase error:', error);
+      errorDiv.textContent = 'Connection error. Please try again.';
+      btn.textContent = 'UNLOCK';
+      btn.disabled = false;
+    });
 });
 
 // Logout
 document.getElementById('logoutBtn').addEventListener('click', function() {
   localStorage.removeItem('isLoggedIn');
-  localStorage.removeItem('accessKey');
-  localStorage.removeItem('historyData');
-  localStorage.removeItem('period');
-  localStorage.removeItem('side');
-  localStorage.removeItem('num');
   location.reload();
 });
 
@@ -416,7 +359,7 @@ function renderHistory() {
     row.className = 'history-row';
     row.innerHTML = `
       <div>${item.period.slice(-5)}</div>
-      <div class="${item.predicted === 'BIG' ? 'predict-big' : 'predict-small'}">${item.predicted}</div>
+      <div>${item.predicted}</div>
       <div class="ball-container">
         <div class="ball small ${getBallClass(item.predictedNum)}">${item.predictedNum}</div>
       </div>
@@ -491,10 +434,7 @@ async function checkResults() {
 function autoPredict() {
   const currentPeriod = getPeriod();
 
-  if (currentPeriod === lastSavedPeriod) {
-    document.getElementById("waitmsg").textContent = "";
-    return;
-  }
+  if (currentPeriod === lastSavedPeriod) return;
 
   const p = generatePrediction();
   updateUI(p.side, p.number);
@@ -516,7 +456,6 @@ function autoPredict() {
   localStorage.setItem("num", String(p.number));
 
   lastSavedPeriod = currentPeriod;
-  document.getElementById("waitmsg").textContent = "";
 }
 
 // Check auth on load
