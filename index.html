@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FLUXO DEATH - V2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);
+      color:#fff;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding:20px;
+      overflow-x:hidden;
+    }
+    .bubbles{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:0;pointer-events:none;}
+    .bubbles span{position:absolute;bottom:-150px;border-radius:50%;animation:rise 25s infinite ease-in;opacity:0.6;}
+    .bubbles span:nth-child(1){width:80px;height:80px;left:5%;animation-duration:18s;background:radial-gradient(circle,#ff149380,#ff149340);}
+    .bubbles span:nth-child(2){width:60px;height:60px;left:15%;animation-duration:22s;background:radial-gradient(circle,#00ffeacc,#00ffea40);}
+    .bubbles span:nth-child(3){width:100px;height:100px;left:35%;animation-duration:26s;background:radial-gradient(circle,#6a5acdcc,#6a5acd40);}
+    .bubbles span:nth-child(4){width:50px;height:50px;left:55%;animation-duration:20s;background:radial-gradient(circle,#ffff0080,#ffff0040);}
+    .bubbles span:nth-child(5){width:90px;height:90px;left:75%;animation-duration:24s;background:radial-gradient(circle,#ff450080,#ff450040);}
+    .bubbles span:nth-child(6){width:120px;height:120px;left:85%;animation-duration:30s;background:radial-gradient(circle,#00bfffcc,#00bfff40);}
+    @keyframes rise{0%{transform:translateY(0) scale(1);opacity:0.6;}100%{transform:translateY(-110vh) scale(1.5);opacity:0;}}
+    .container{width:100%;max-width:500px;position:relative;z-index:2;}
+    .glass{background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+    
+    /* Login Page */
+    .login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;}
+    .login-box{width:100%;max-width:400px;padding:32px;}
+    .login-title{font-size:1.8rem;font-weight:bold;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,#ff1493,#00ffea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .login-subtitle{text-align:center;color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:32px;}
+    .login-input{width:100%;padding:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:16px;color:#fff;font-size:1.1rem;text-align:center;letter-spacing:4px;outline:none;transition:all 0.3s;}
+    .login-input::placeholder{color:rgba(255,255,255,0.4);letter-spacing:normal;}
+    .login-input:focus{border-color:#ff1493;box-shadow:0 0 20px rgba(255,20,147,0.3);}
+    .login-btn{width:100%;padding:16px;margin-top:24px;border:none;border-radius:50px;font-size:1.1rem;font-weight:bold;color:#fff;background:linear-gradient(135deg,#ff1493,#00ffea);cursor:pointer;transition:all 0.3s;}
+    .login-btn:hover{opacity:0.9;transform:scale(1.02);}
+    .login-btn:disabled{opacity:0.5;cursor:not-allowed;}
+    .login-footer{text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:24px;}
+    .login-error{text-align:center;color:#ef4444;font-size:0.85rem;margin-top:16px;display:none;}
+    
+    /* Dashboard */
+    .dashboard{display:none;}
+    .header{text-align:center;padding:20px;margin-bottom:20px;position:relative;}
+    .header h1{font-size:clamp(1.2rem,5vw,1.5rem);font-weight:bold;background:linear-gradient(135deg,#ff1493,#00ffea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .logout-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:none;padding:8px 12px;border-radius:50%;cursor:pointer;color:#fff;transition:all 0.3s;font-size:1.2rem;}
+    .logout-btn:hover{background:rgba(255,255,255,0.2);}
+    .top-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;margin-bottom:20px;}
+    .period-box{font-size:clamp(0.8rem,3vw,1rem);font-weight:600;color:rgba(255,255,255,0.9);}
+    .timer-box{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,6vw,2rem);font-weight:bold;color:#00bfff;}
+    
+    .stats-section{padding:16px 20px;margin-bottom:20px;}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;}
+    .stat-item{display:flex;flex-direction:column;}
+    .stat-label{font-size:0.7rem;color:rgba(255,255,255,0.6);margin-bottom:4px;}
+    .stat-value{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:bold;}
+    .stat-value.total{color:#fff;}
+    .stat-value.win{color:#22c55e;text-shadow:0 0 10px rgba(34,197,94,0.5);}
+    .stat-value.loss{color:#ef4444;text-shadow:0 0 10px rgba(239,68,68,0.5);}
+    .stat-value.rate{color:#ff1493;text-shadow:0 0 10px rgba(255,20,147,0.5);}
+    
+    .prediction-section{padding:24px;margin-bottom:20px;text-align:center;}
+    .prediction-label{font-size:0.9rem;color:rgba(255,255,255,0.7);margin-bottom:16px;}
+    .wait-msg{font-size:0.9rem;color:#ffd700;margin-bottom:10px;font-weight:bold;}
+    .bigtext-container{width:160px;height:160px;margin:0 auto 20px;position:relative;}
+    .bigtext{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:clamp(3rem,10vw,4rem);font-weight:900;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);box-shadow:0 0 40px rgba(255,255,255,0.2);overflow:hidden;position:relative;}
+    .bigtext.big{color:#ff1493;text-shadow:0 0 30px rgba(255,20,147,0.8);}
+    .bigtext.small{color:#00ffea;text-shadow:0 0 30px rgba(0,255,234,0.8);}
+    .bigtext .inner-bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,0.2);animation:riseIn 8s infinite ease-in;}
+    .bigtext .inner-bubble:nth-child(1){width:20px;height:20px;left:20%;bottom:-20px;animation-duration:6s;}
+    .bigtext .inner-bubble:nth-child(2){width:25px;height:25px;left:50%;bottom:-25px;animation-duration:7s;}
+    .bigtext .inner-bubble:nth-child(3){width:15px;height:15px;left:70%;bottom:-15px;animation-duration:5s;}
+    @keyframes riseIn{0%{transform:translateY(0) scale(1);opacity:0.5;}100%{transform:translateY(-180px) scale(1.5);opacity:0;}}
+    .ball{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:bold;color:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+    .ball.small{width:32px;height:32px;font-size:0.9rem;}
+    .ball.red{background:radial-gradient(circle at 30% 30%,#ff6b9d,#ff1493,#a0005a);}
+    .ball.green{background:radial-gradient(circle at 30% 30%,#6bd36b,#22c55e,#006600);}
+    .ball.purple{background:radial-gradient(circle at 30% 30%,#c4b5fd,#8b5cf6,#5b21b6);}
+    .number-circle{width:96px;height:96px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:bold;}
+    .choice-buttons{display:flex;gap:0;border-radius:50px;overflow:hidden;margin-top:20px;}
+    .choice-buttons button{flex:1;padding:16px 0;font-size:1.1rem;font-weight:bold;border:none;cursor:pointer;transition:all 0.3s;color:#fff;}
+    .choice-buttons .big-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:50px 0 0 50px;}
+    .choice-buttons .small-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);border-radius:0 50px 50px 0;}
+    .choice-buttons button:hover{opacity:0.85;transform:scale(1.02);}
+    .history-section{padding:16px;}
+    .history-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px;font-size:0.75rem;font-weight:bold;background:rgba(255,255,255,0.25);border-radius:12px;margin-bottom:8px;text-align:center;}
+    .history-box{max-height:320px;overflow-y:auto;}
+    .history-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px;font-size:0.8rem;background:rgba(255,255,255,0.15);border-radius:12px;margin-bottom:6px;align-items:center;text-align:center;animation:scaleIn 0.3s ease-out;}
+    .history-row .ball-container{display:flex;justify-content:center;}
+    .status-pending{color:#ffd700;font-weight:bold;animation:pulse 1.5s infinite;}
+    .status-win{color:#22c55e;font-weight:bold;text-shadow:0 0 10px rgba(34,197,94,0.5);}
+    .status-loss{color:#ef4444;font-weight:bold;text-shadow:0 0 10px rgba(239,68,68,0.5);}
+    .predict-big{color:#f59e0b;font-weight:600;}
+    .predict-small{color:#3b82f6;font-weight:600;}
+    @keyframes scaleIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+    ::-webkit-scrollbar{width:6px;}
+    ::-webkit-scrollbar-track{background:rgba(255,255,255,0.1);border-radius:3px;}
+    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:3px;}
+    .hidden{display:none !important;}
+  </style>
+</head>
+<body>
+  <div class="bubbles">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="login-container">
+    <div class="login-box glass">
+      <h1 class="login-title">FLUXO DEATH - V2</h1>
+      <p class="login-subtitle">Enter your access key to continue</p>
+      <form id="loginForm">
+        <input type="password" id="keyInput" class="login-input" placeholder="Enter Access Key" autocomplete="off">
+        <button type="submit" id="loginBtn" class="login-btn">UNLOCK</button>
+        <p id="loginError" class="login-error"></p>
+      </form>
+      <p class="login-footer">POWERED BY - ITACHIIXT TEAM</p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" class="container dashboard">
+    <header class="header glass">
+      <h1>FLUXO DEATH - TEAM</h1>
+      <button class="logout-btn" id="logoutBtn">⏻</button>
+    </header>
+    <div class="top-bar glass">
+      <div class="period-box">PERIOD JACKPOT NO - <span id="period">--</span></div>
+      <div class="timer-box" id="timer">--</div>
+    </div>
+
+    <section class="stats-section glass">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">TOTAL</span>
+          <span class="stat-value total" id="totalCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">WIN</span>
+          <span class="stat-value win" id="winCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">LOSE</span>
+          <span class="stat-value loss" id="lossCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">WIN RATE</span>
+          <span class="stat-value rate" id="winRate">0.0%</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="prediction-section glass">
+      <p class="prediction-label">FLUXO DEATH - PLATFORM</p>
+      <p id="waitmsg" class="wait-msg"></p>
+
+      <div class="bigtext-container">
+        <div id="prediction" class="bigtext big">
+          <span class="inner-bubble"></span>
+          <span class="inner-bubble"></span>
+          <span class="inner-bubble"></span>
+          <span class="text">B</span>
+        </div>
+      </div>
+
+      <div id="numberCircle" class="number-circle ball">5</div>
+
+      <div class="choice-buttons">
+        <button class="big-btn">BG NO</button>
+        <button class="small-btn">SM NO</button>
+      </div>
+    </section>
+
+    <section class="history-section glass">
+      <div class="history-header">
+        <div>PERIOD NO</div>
+        <div>PREDICT</div>
+        <div>JACKPOT</div>
+        <div>STATUS</div>
+      </div>
+      <div id="historyBox" class="history-box"></div>
+    </section>
+  </div>
+
+<script>
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBaeiB0JJ3Rfo1t2_iJ2DyXnrDXiBTsnk0",
+  authDomain: "Itachi.support.com",
+  projectId: "itachiixt",
+  storageBucket: "itachiixt.firebasestorage.app",
+  messagingSenderId: "909234170582",
+  appId: "1:909234170582:android:9618b2e57396a43f643777",
+  measurementId: "G-MH7LC1R7C9",
+  databaseURL: "https://itachiixt-default-rtdb.firebaseio.com"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+const HISTORY_API = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
+
+let historyData = [];
+let lastSavedPeriod = null;
+
+// Generate unique device ID
+function getDeviceId() {
+  let deviceId = localStorage.getItem('deviceId');
+  if (!deviceId) {
+    deviceId = 'device_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+    localStorage.setItem('deviceId', deviceId);
+  }
+  return deviceId;
+}
+
+// Validate key with Firebase
+async function validateKey(key) {
+  try {
+    const snapshot = await database.ref('keys/' + key).once('value');
+    
+    if (!snapshot.exists()) {
+      return { valid: false, message: 'Invalid key. Contact ITACHIIXT for access.' };
+    }
+    
+    const keyData = snapshot.val();
+    const deviceId = getDeviceId();
+    
+    // Check if key is active
+    if (keyData.active === false) {
+      return { valid: false, message: 'This key has been deactivated.' };
+    }
+    
+    // Check expiration
+    if (keyData.expiresAt && Date.now() > keyData.expiresAt) {
+      return { valid: false, message: 'This key has expired.' };
+    }
+    
+    // Check device binding (one device per key)
+    if (keyData.deviceId && keyData.deviceId !== deviceId) {
+      return { valid: false, message: 'This key is already registered to another device.' };
+    }
+    
+    // Bind device if not already bound
+    if (!keyData.deviceId) {
+      await database.ref('keys/' + key).update({
+        deviceId: deviceId,
+        lastLogin: Date.now()
+      });
+    } else {
+      // Update last login
+      await database.ref('keys/' + key + '/lastLogin').set(Date.now());
+    }
+    
+    return { valid: true, message: 'Access granted!' };
+  } catch (error) {
+    console.error('Firebase validation error:', error);
+    // Fallback to local validation if Firebase fails
+    if (key === '') {
+      return { valid: true, message: 'Access granted (offline mode)' };
+    }
+    return { valid: false, message: 'Connection error. Please try again.' };
+  }
+}
+
+// Check if already logged in
+function checkAuth() {
+  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  if (isLoggedIn === 'true') {
+    showDashboard();
+  }
+}
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const key = document.getElementById('keyInput').value.trim().toUpperCase();
+  const btn = document.getElementById('loginBtn');
+  const errorEl = document.getElementById('loginError');
+  
+  if (!key) {
+    errorEl.textContent = '';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  btn.textContent = 'VERIFYING';
+  btn.disabled = true;
+  errorEl.style.display = 'none';
+  
+  const result = await validateKey(key);
+  
+  if (result.valid) {
+    // Clear all data on login
+    localStorage.removeItem('historyData');
+    localStorage.removeItem('period');
+    localStorage.removeItem('side');
+    localStorage.removeItem('num');
+    historyData = [];
+    
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('accessKey', key);
+    showDashboard();
+  } else {
+    errorEl.textContent = result.message;
+    errorEl.style.display = 'block';
+    btn.textContent = 'UNLOCK';
+    btn.disabled = false;
+  }
+});
+
+// Logout
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  localStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('accessKey');
+  localStorage.removeItem('historyData');
+  localStorage.removeItem('period');
+  localStorage.removeItem('side');
+  localStorage.removeItem('num');
+  location.reload();
+});
+
+function showDashboard() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('dashboard').style.display = 'block';
+  initDashboard();
+}
+
+function initDashboard() {
+  // Load saved history
+  const saved = localStorage.getItem('historyData');
+  if (saved) historyData = JSON.parse(saved);
+  
+  // Load saved prediction
+  lastSavedPeriod = localStorage.getItem('period');
+  const savedSide = localStorage.getItem('side');
+  const savedNum = localStorage.getItem('num');
+  
+  if (lastSavedPeriod && savedSide && savedNum) {
+    updateUI(savedSide, parseInt(savedNum, 10));
+  }
+  
+  renderHistory();
+  
+  // Start intervals
+  setInterval(updateTimer, 1000);
+  setInterval(autoPredict, 1000);
+  setInterval(checkResults, 10000);
+  
+  updateTimer();
+  autoPredict();
+  checkResults();
+}
+
+function getIST() {
+  const n = new Date();
+  const u = n.getTime() + n.getTimezoneOffset() * 60000;
+  return new Date(u + 5.5 * 3600000);
+}
+
+function getPeriod() {
+  const ist = getIST();
+  const y = ist.getFullYear();
+  const m = String(ist.getMonth() + 1).padStart(2, '0');
+  const dd = String(ist.getDate()).padStart(2, '0');
+  const minutes = ist.getHours() * 60 + ist.getMinutes();
+  return String(y) + m + dd + "1000" + (10001 + minutes - 330);
+}
+
+function getBallClass(n) {
+  if ([2,4,6,8].includes(n)) return 'red';
+  if ([1,3,7,9].includes(n)) return 'green';
+  return 'purple';
+}
+
+function getStatusClass(status) {
+  if (status === 'WIN') return 'status-win';
+  if (status === 'LOSS') return 'status-loss';
+  return 'status-pending';
+}
+
+function updateTimer() {
+  const now = getIST();
+  const sec = now.getSeconds();
+  document.getElementById('timer').textContent = (60 - sec).toString().padStart(2,'0');
+  document.getElementById('period').textContent = getPeriod().slice(-5);
+}
+
+function updateStats() {
+  const completed = historyData.filter(h => h.status !== 'PENDING');
+  const wins = historyData.filter(h => h.status === 'WIN').length;
+  const losses = historyData.filter(h => h.status === 'LOSS').length;
+  const total = completed.length;
+  const winRate = total > 0 ? ((wins / total) * 100).toFixed(1) : '0.0';
+
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('winCount').textContent = wins;
+  document.getElementById('lossCount').textContent = losses;
+  document.getElementById('winRate').textContent = winRate + '%';
+}
+
+function renderHistory() {
+  const box = document.getElementById('historyBox');
+  box.innerHTML = '';
+  
+  historyData.slice(0, 20).forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'history-row';
+    row.innerHTML = `
+      <div>${item.period.slice(-5)}</div>
+      <div class="${item.predicted === 'BIG' ? 'predict-big' : 'predict-small'}">${item.predicted}</div>
+      <div class="ball-container">
+        <div class="ball small ${getBallClass(item.predictedNum)}">${item.predictedNum}</div>
+      </div>
+      <div class="${getStatusClass(item.status)}">${item.status}</div>
+    `;
+    box.appendChild(row);
+  });
+
+  updateStats();
+}
+
+function generatePrediction() {
+  const side = Math.random() < 0.5 ? "BIG" : "SMALL";
+  const big = [5,6,7,8,9];
+  const small = [0,1,2,3,4];
+  const number = side === "BIG" ? big[Math.floor(Math.random()*big.length)]
+                                : small[Math.floor(Math.random()*small.length)];
+  return { side, number };
+}
+
+function updateUI(side, num) {
+  const pred = document.getElementById('prediction');
+  pred.className = `bigtext ${side === 'BIG' ? 'big' : 'small'}`;
+  pred.innerHTML = `
+    <span class="inner-bubble"></span>
+    <span class="inner-bubble"></span>
+    <span class="inner-bubble"></span>
+    <span class="text">${side === 'BIG' ? 'B' : 'S'}</span>
+  `;
+
+  const numberCircle = document.getElementById('numberCircle');
+  numberCircle.textContent = num;
+  numberCircle.className = `number-circle ball ${getBallClass(num)}`;
+}
+
+async function checkResults() {
+  try {
+    const response = await fetch(HISTORY_API);
+    const data = await response.json();
+    
+    if (data?.data?.list && Array.isArray(data.data.list)) {
+      const results = data.data.list;
+      let updated = false;
+      
+      historyData = historyData.map(item => {
+        if (item.status !== 'PENDING') return item;
+        
+        const result = results.find(r => r.issueNumber === item.period);
+        
+        if (result) {
+          const actualNum = parseInt(result.number, 10);
+          const actualSide = actualNum >= 5 ? 'BIG' : 'SMALL';
+          const isWin = item.predicted === actualSide;
+          updated = true;
+          
+          return { ...item, actualNum, status: isWin ? 'WIN' : 'LOSS' };
+        }
+        
+        return item;
+      });
+      
+      if (updated) {
+        localStorage.setItem('historyData', JSON.stringify(historyData));
+        renderHistory();
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch results:', error);
+  }
+}
+
+function autoPredict() {
+  const currentPeriod = getPeriod();
+
+  if (currentPeriod === lastSavedPeriod) {
+    document.getElementById("waitmsg").textContent = "";
+    return;
+  }
+
+  const p = generatePrediction();
+  updateUI(p.side, p.number);
+
+  const newEntry = {
+    period: currentPeriod,
+    predicted: p.side,
+    predictedNum: p.number,
+    status: 'PENDING'
+  };
+  
+  historyData.unshift(newEntry);
+  historyData = historyData.slice(0, 50);
+  localStorage.setItem('historyData', JSON.stringify(historyData));
+  renderHistory();
+
+  localStorage.setItem("period", currentPeriod);
+  localStorage.setItem("side", p.side);
+  localStorage.setItem("num", String(p.number));
+
+  lastSavedPeriod = currentPeriod;
+  document.getElementById("waitmsg").textContent = "";
+}
+
+// Check auth on load
+checkAuth();
+</script>
+</body>
+</html>
