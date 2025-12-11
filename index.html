@@ -37,14 +37,15 @@
     .login-box{width:100%;max-width:400px;padding:32px;}
     .login-title{font-size:1.8rem;font-weight:bold;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,#ff1493,#00ffea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .login-subtitle{text-align:center;color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:32px;}
-    .login-input{width:100%;padding:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:16px;color:#fff;font-size:1.1rem;text-align:center;letter-spacing:4px;outline:none;transition:all 0.3s;}
-    .login-input::placeholder{color:rgba(255,255,255,0.4);letter-spacing:normal;}
+    .login-input{width:100%;padding:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:16px;color:#fff;font-size:1.1rem;text-align:center;letter-spacing:4px;outline:none;transition:all 0.3s;text-transform:uppercase;}
+    .login-input::placeholder{color:rgba(255,255,255,0.4);letter-spacing:normal;text-transform:none;}
     .login-input:focus{border-color:#ff1493;box-shadow:0 0 20px rgba(255,20,147,0.3);}
     .login-btn{width:100%;padding:16px;margin-top:24px;border:none;border-radius:50px;font-size:1.1rem;font-weight:bold;color:#fff;background:linear-gradient(135deg,#ff1493,#00ffea);cursor:pointer;transition:all 0.3s;}
     .login-btn:hover{opacity:0.9;transform:scale(1.02);}
     .login-btn:disabled{opacity:0.5;cursor:not-allowed;}
     .login-footer{text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:24px;}
-    .login-error{color:#ef4444;text-align:center;font-size:0.85rem;margin-top:12px;}
+    .login-error{color:#ef4444;text-align:center;font-size:0.85rem;margin-top:12px;font-weight:600;}
+    .login-info{margin-top:16px;padding:12px;background:rgba(255,255,255,0.05);border-radius:12px;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.6);}
     
     /* Dashboard */
     .dashboard{display:none;}
@@ -88,6 +89,7 @@
     .choice-buttons .big-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:50px 0 0 50px;}
     .choice-buttons .small-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);border-radius:0 50px 50px 0;}
     .choice-buttons button:hover{opacity:0.85;transform:scale(1.02);}
+    .choice-buttons button.active{ring:2px solid rgba(255,255,255,0.5);}
     .history-section{padding:16px;}
     .history-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px;font-size:0.75rem;font-weight:bold;background:rgba(255,255,255,0.25);border-radius:12px;margin-bottom:8px;text-align:center;}
     .history-box{max-height:320px;overflow-y:auto;}
@@ -112,22 +114,23 @@
   <!-- LOGIN PAGE -->
   <div id="loginPage" class="login-container">
     <div class="login-box glass">
-      <h1 class="login-title">SHADOW CLON - V2</h1>
-      <p class="login-subtitle"></p>
+      <h1 class="login-title">SHADOW TECHOLOGY</h1>
+      <p class="login-subtitle">CONNECTION TO SHODOW OFFICIALLY</p>
       <form id="loginForm">
         <input type="password" id="keyInput" class="login-input" placeholder="ITACHIIXT" autocomplete="off">
         <div id="loginError" class="login-error"></div>
         <button type="submit" id="loginBtn" class="login-btn">UNLOCK</button>
       </form>
-      <p class="login-footer">TELEGRAM USERNAME BYY - ITACHIIXT</p>
+      <p class="login-footer"></p>
+      <div class="login-info">TELEGRAM USERNAME BY - ITACHIIXT</div>
     </div>
   </div>
 
   <!-- DASHBOARD -->
   <div id="dashboard" class="container dashboard">
     <header class="header glass">
-      <h1>SHADOW CLON - V2</h1>
-      <button class="logout-btn" id="logoutBtn">㊰</button>
+      <h1>SHADOW - V2</h1>
+      <button class="logout-btn" id="logoutBtn">∞</button>
     </header>
     <div class="top-bar glass">
       <div class="period-box">PERIOD SHADOW NO - <span id="period">--</span></div>
@@ -156,7 +159,7 @@
     </section>
 
     <section class="prediction-section glass">
-      <p class="prediction-label">SHADOW CLON - PLATFOM</p>
+      <p class="prediction-label">SHADOW TECHNOLOGY - PLATFOM</p>
 
       <div class="bigtext-container">
         <div id="prediction" class="bigtext big">
@@ -180,7 +183,7 @@
         <div>PERIOD NO</div>
         <div>PREDICT</div>
         <div>JACKPOT</div>
-        <div>STATUT</div>
+        <div>STATUS</div>
       </div>
       <div id="historyBox" class="history-box"></div>
     </section>
@@ -231,6 +234,11 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
   const btn = document.getElementById('loginBtn');
   const errorDiv = document.getElementById('loginError');
   
+  if (!key) {
+    errorDiv.textContent = '" PLEASE A KEY - XT"';
+    return;
+  }
+  
   btn.textContent = 'VERIFYING';
   btn.disabled = true;
   errorDiv.textContent = '';
@@ -251,7 +259,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
           return;
         }
         
-        if (keyData.expiresAt <= now) {
+        if (keyData.expiresAt && keyData.expiresAt <= now) {
           errorDiv.textContent = '" KEY HAS EXPIRED "';
           btn.textContent = 'UNLOCK';
           btn.disabled = false;
@@ -260,7 +268,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         
         // Check device binding - one key per device
         if (keyData.deviceId && keyData.deviceId !== deviceId) {
-          errorDiv.textContent = '" KEY IS ALREADY USE "';
+          errorDiv.textContent = '" KEY IS ALREADY IN USE "';
           btn.textContent = 'UNLOCK';
           btn.disabled = false;
           return;
@@ -282,7 +290,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         localStorage.setItem('loginKey', key);
         showDashboard();
       } else {
-        errorDiv.textContent = 'Invalid key';
+        errorDiv.textContent = '" INVALID KEY "';
         btn.textContent = 'UNLOCK';
         btn.disabled = false;
       }
@@ -331,7 +339,7 @@ function initDashboard() {
   // Start intervals
   setInterval(updateTimer, 1000);
   setInterval(autoPredict, 1000);
-  setInterval(checkResults, 1000);
+  setInterval(checkResults, 3000);
   
   updateTimer();
   autoPredict();
@@ -406,6 +414,7 @@ function renderHistory() {
   updateStats();
 }
 
+// Random pattern-based prediction logic
 function generatePrediction() {
   const side = Math.random() < 0.5 ? "BIG" : "SMALL";
   const big = [5,6,7,8,9];
@@ -430,6 +439,7 @@ function updateUI(side, num) {
   numberCircle.className = `number-circle ball ${getBallClass(num)}`;
 }
 
+// Fetch real results from WinGo API
 async function checkResults() {
   try {
     const response = await fetch(HISTORY_API);
