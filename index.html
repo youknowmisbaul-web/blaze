@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1251,10 +1252,10 @@ function isExpired(expiresAt) {
 }
 
 function generateRandomKey() {
-  const chars = 'ABCDEFGHIJKLMNOPRSTUVWXYZ0123456789';
+  const chars = 'ABCDEFGHILMNOSTUYZ012345678911121314151617181920';
   let key = 'SH';
-  for (let i = 0; i < 12; i++) {
-    if (i > 0 && i % 4 === 0) key += '-';
+  for (let i = 0; i < 8; i++) {
+    if (i > 0 && i % 2 === 0) key += '-';
     key += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return key;
