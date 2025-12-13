@@ -1252,7 +1252,7 @@ function isExpired(expiresAt) {
 
 function generateRandomKey() {
   const chars = 'ABCDEFGHIJKLMNOPRSTUVWXYZ0123456789';
-  let key = 'SHW';
+  let key = 'SH';
   for (let i = 0; i < 12; i++) {
     if (i > 0 && i % 4 === 0) key += '-';
     key += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1274,7 +1274,7 @@ function initializeDefaultKey() {
   const keys = getAllKeys();
   if (keys.length === 0) {
     const defaultKey = {
-      key: '',
+      key: 'ITACHIIIXT',
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
       usedBy: null,
