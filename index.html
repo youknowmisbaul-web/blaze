@@ -3,111 +3,1969 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ITACHIIXT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <title>SHADOW - V2 UPDATE | AI Prediction Platform</title>
+  <meta name="description" content="SHADOW V2 - Advanced AI-powered prediction platform with real-time analytics and pattern recognition technology.">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{
-      font-family:'Poppins',sans-serif;
-      background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);
-      color:#fff;
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      padding:20px;
-      overflow-x:hidden;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --primary: #00bfff;
+      --primary-dark: #0099cc;
+      --secondary: #10b981;
+      --secondary-dark: #059669;
+      --accent: #a855f7;
+      --success: #22c55e;
+      --destructive: #ef4444;
+      --warning: #f59e0b;
+      --bg-start: #0c1929;
+      --bg-mid: #1e3a5f;
+      --bg-end: #0c1929;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --text-primary: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --bubble-1: radial-gradient(circle, rgba(0,191,255,0.5), rgba(0,191,255,0.25));
+      --bubble-2: radial-gradient(circle, rgba(16,185,129,0.8), rgba(16,185,129,0.25));
+      --bubble-3: radial-gradient(circle, rgba(168,85,247,0.8), rgba(168,85,247,0.25));
+      --bubble-4: radial-gradient(circle, rgba(34,211,238,0.5), rgba(34,211,238,0.25));
+      --bubble-5: radial-gradient(circle, rgba(59,130,246,0.5), rgba(59,130,246,0.25));
+      --bubble-6: radial-gradient(circle, rgba(52,211,153,0.8), rgba(52,211,153,0.25));
     }
-    .bubbles{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;z-index:0;pointer-events:none;}
-    .bubbles span{position:absolute;bottom:-150px;border-radius:50%;animation:rise 25s infinite ease-in;opacity:0.6;}
-    .bubbles span:nth-child(1){width:80px;height:80px;left:5%;animation-duration:18s;background:radial-gradient(circle,#ff149380,#ff149340);}
-    .bubbles span:nth-child(2){width:60px;height:60px;left:15%;animation-duration:22s;background:radial-gradient(circle,#00ffeacc,#00ffea40);}
-    .bubbles span:nth-child(3){width:100px;height:100px;left:35%;animation-duration:26s;background:radial-gradient(circle,#6a5acdcc,#6a5acd40);}
-    .bubbles span:nth-child(4){width:50px;height:50px;left:55%;animation-duration:20s;background:radial-gradient(circle,#ffff0080,#ffff0040);}
-    .bubbles span:nth-child(5){width:90px;height:90px;left:75%;animation-duration:24s;background:radial-gradient(circle,#ff450080,#ff450040);}
-    .bubbles span:nth-child(6){width:120px;height:120px;left:85%;animation-duration:30s;background:radial-gradient(circle,#00bfffcc,#00bfff40);}
-    @keyframes rise{0%{transform:translateY(0) scale(1);opacity:0.6;}100%{transform:translateY(-110vh) scale(1.5);opacity:0;}}
-    .container{width:100%;max-width:500px;position:relative;z-index:2;}
-    .glass{background:rgba(255,255,255,0.1);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.2);border-radius:24px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}
     
-    /* Login Page */
-    .login-container{display:flex;align-items:center;justify-content:center;min-height:100vh;width:100%;}
-    .login-box{width:100%;max-width:400px;padding:32px;}
-    .login-title{font-size:1.8rem;font-weight:bold;text-align:center;margin-bottom:8px;background:linear-gradient(135deg,#ff1493,#00ffea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .login-subtitle{text-align:center;color:rgba(255,255,255,0.6);font-size:0.9rem;margin-bottom:32px;}
-    .login-input{width:100%;padding:16px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:16px;color:#fff;font-size:1.1rem;text-align:center;letter-spacing:4px;outline:none;transition:all 0.3s;}
-    .login-input::placeholder{color:rgba(255,255,255,0.4);letter-spacing:normal;}
-    .login-input:focus{border-color:#ff1493;box-shadow:0 0 20px rgba(255,20,147,0.3);}
-    .login-btn{width:100%;padding:16px;margin-top:24px;border:none;border-radius:50px;font-size:1.1rem;font-weight:bold;color:#fff;background:linear-gradient(135deg,#ff1493,#00ffea);cursor:pointer;transition:all 0.3s;}
-    .login-btn:hover{opacity:0.9;transform:scale(1.02);}
-    .login-btn:disabled{opacity:0.5;cursor:not-allowed;}
-    .login-footer{text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:24px;}
-    .login-error{color:#ef4444;text-align:center;font-size:0.85rem;margin-top:12px;}
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+      overflow-x: hidden;
+    }
     
-    /* Dashboard */
-    .dashboard{display:none;}
-    .header{text-align:center;padding:20px;margin-bottom:20px;position:relative;}
-    .header h1{font-size:clamp(1.2rem,5vw,1.5rem);font-weight:bold;background:linear-gradient(135deg,#ff1493,#00ffea);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-    .logout-btn{position:absolute;right:16px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,0.1);border:none;padding:8px 12px;border-radius:50%;cursor:pointer;color:#fff;transition:all 0.3s;font-size:1.2rem;}
-    .logout-btn:hover{background:rgba(255,255,255,0.2);}
-    .top-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;margin-bottom:20px;}
-    .period-box{font-size:clamp(0.8rem,3vw,1rem);font-weight:600;color:rgba(255,255,255,0.9);}
-    .timer-box{font-family:'Orbitron',sans-serif;font-size:clamp(1.5rem,6vw,2rem);font-weight:bold;color:#00bfff;}
+    /* Animated Bubbles */
+    .bubbles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
     
-    .stats-section{padding:16px 20px;margin-bottom:20px;}
-    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;}
-    .stat-item{display:flex;flex-direction:column;}
-    .stat-label{font-size:0.7rem;color:rgba(255,255,255,0.6);margin-bottom:4px;}
-    .stat-value{font-family:'Orbitron',sans-serif;font-size:1.1rem;font-weight:bold;}
-    .stat-value.total{color:#fff;}
-    .stat-value.win{color:#22c55e;text-shadow:0 0 10px rgba(34,197,94,0.5);}
-    .stat-value.loss{color:#ef4444;text-shadow:0 0 10px rgba(239,68,68,0.5);}
-    .stat-value.rate{color:#ff1493;text-shadow:0 0 10px rgba(255,20,147,0.5);}
+    .bubbles span {
+      position: absolute;
+      bottom: -150px;
+      border-radius: 50%;
+      animation: rise 25s infinite ease-in;
+      opacity: 0.6;
+    }
     
-    .prediction-section{padding:24px;margin-bottom:20px;text-align:center;}
-    .prediction-label{font-size:0.9rem;color:rgba(255,255,255,0.7);margin-bottom:16px;}
-    .bigtext-container{width:160px;height:160px;margin:0 auto 20px;position:relative;}
-    .bigtext{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:clamp(3rem,10vw,4rem);font-weight:900;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);box-shadow:0 0 40px rgba(255,255,255,0.2);overflow:hidden;position:relative;}
-    .bigtext.big{color:#ff1493;text-shadow:0 0 30px rgba(255,20,147,0.8);}
-    .bigtext.small{color:#00ffea;text-shadow:0 0 30px rgba(0,255,234,0.8);}
-    .bigtext .inner-bubble{position:absolute;border-radius:50%;background:rgba(255,255,255,0.2);animation:riseIn 8s infinite ease-in;}
-    .bigtext .inner-bubble:nth-child(1){width:20px;height:20px;left:20%;bottom:-20px;animation-duration:6s;}
-    .bigtext .inner-bubble:nth-child(2){width:25px;height:25px;left:50%;bottom:-25px;animation-duration:7s;}
-    .bigtext .inner-bubble:nth-child(3){width:15px;height:15px;left:70%;bottom:-15px;animation-duration:5s;}
-    @keyframes riseIn{0%{transform:translateY(0) scale(1);opacity:0.5;}100%{transform:translateY(-180px) scale(1.5);opacity:0;}}
-    .ball{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:1.2rem;font-weight:bold;color:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
-    .ball.small{width:32px;height:32px;font-size:0.9rem;}
-    .ball.red{background:radial-gradient(circle at 30% 30%,#ff6b9d,#ff1493,#a0005a);}
-    .ball.green{background:radial-gradient(circle at 30% 30%,#6bd36b,#22c55e,#006600);}
-    .ball.purple{background:radial-gradient(circle at 30% 30%,#c4b5fd,#8b5cf6,#5b21b6);}
-    .number-circle{width:96px;height:96px;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:bold;}
-    .choice-buttons{display:flex;gap:0;border-radius:50px;overflow:hidden;margin-top:20px;}
-    .choice-buttons button{flex:1;padding:16px 0;font-size:1.1rem;font-weight:bold;border:none;cursor:pointer;transition:all 0.3s;color:#fff;}
-    .choice-buttons .big-btn{background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:50px 0 0 50px;}
-    .choice-buttons .small-btn{background:linear-gradient(135deg,#3b82f6,#2563eb);border-radius:0 50px 50px 0;}
-    .choice-buttons button:hover{opacity:0.85;transform:scale(1.02);}
-    .history-section{padding:16px;}
-    .history-header{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px;font-size:0.75rem;font-weight:bold;background:rgba(255,255,255,0.25);border-radius:12px;margin-bottom:8px;text-align:center;}
-    .history-box{max-height:320px;overflow-y:auto;}
-    .history-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;padding:12px;font-size:0.8rem;background:rgba(255,255,255,0.15);border-radius:12px;margin-bottom:6px;align-items:center;text-align:center;animation:scaleIn 0.3s ease-out;}
-    .history-row .ball-container{display:flex;justify-content:center;}
-    .status-pending{color:#ffd700;font-weight:bold;animation:pulse 1.5s infinite;}
-    .status-win{color:#22c55e;font-weight:bold;text-shadow:0 0 10px rgba(34,197,94,0.5);}
-    .status-loss{color:#ef4444;font-weight:bold;text-shadow:0 0 10px rgba(239,68,68,0.5);}
-    @keyframes scaleIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
-    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
-    ::-webkit-scrollbar{width:6px;}
-    ::-webkit-scrollbar-track{background:rgba(255,255,255,0.1);border-radius:3px;}
-    ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:3px;}
-    .hidden{display:none !important;}
+    .bubbles span:nth-child(1) { width: 80px; height: 80px; left: 5%; animation-duration: 18s; background: var(--bubble-1); }
+    .bubbles span:nth-child(2) { width: 60px; height: 60px; left: 15%; animation-duration: 22s; animation-delay: 2s; background: var(--bubble-2); }
+    .bubbles span:nth-child(3) { width: 100px; height: 100px; left: 35%; animation-duration: 26s; animation-delay: 4s; background: var(--bubble-3); }
+    .bubbles span:nth-child(4) { width: 50px; height: 50px; left: 55%; animation-duration: 20s; animation-delay: 1s; background: var(--bubble-4); }
+    .bubbles span:nth-child(5) { width: 90px; height: 90px; left: 75%; animation-duration: 24s; animation-delay: 3s; background: var(--bubble-5); }
+    .bubbles span:nth-child(6) { width: 120px; height: 120px; left: 85%; animation-duration: 30s; animation-delay: 5s; background: var(--bubble-6); }
+    
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity: 0.6; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+    
+    /* Glass Effect */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .container { width: 100%; max-width: 500px; position: relative; z-index: 2; }
+    
+    /* Gradient Text */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* ==================== LOGIN PAGE ==================== */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+    }
+    
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      padding: 40px 32px;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .login-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: bounceIn 0.6s ease-out;
+    }
+    
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    
+    .login-icon svg {
+      width: 32px;
+      height: 32px;
+      color: #0c1929;
+    }
+    
+    .login-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+    
+    .login-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 32px;
+    }
+    
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 16px;
+    }
+    
+    .input-wrapper svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      color: var(--text-muted);
+    }
+    
+    .login-input {
+      width: 100%;
+      padding: 16px 16px 16px 48px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      color: var(--text-primary);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      text-align: center;
+      letter-spacing: 4px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .login-input::placeholder {
+      color: var(--text-muted);
+      letter-spacing: normal;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .login-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
+    }
+    
+    .login-error {
+      color: var(--destructive);
+      text-align: center;
+      font-size: 0.85rem;
+      margin: 12px 0;
+      min-height: 20px;
+      animation: shake 0.5s ease-out;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+    
+    .login-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--bg-start);
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .login-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+    
+    .login-btn:active {
+      transform: scale(0.98);
+    }
+    
+    .login-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .login-footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 24px;
+    }
+    
+    /* ==================== DASHBOARD ==================== */
+    .dashboard { display: none; }
+    
+    .header {
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 5vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    
+    .header-btns {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: var(--text-primary);
+      transition: all 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .icon-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .icon-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    
+    .period-box {
+      font-size: clamp(0.8rem, 3vw, 1rem);
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .period-box span {
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    .timer-box {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.5rem, 6vw, 2rem);
+      font-weight: 700;
+      color: var(--secondary);
+      text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    }
+    
+    /* Stats Section */
+    .stats-section {
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+    
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .stat-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+    
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform 0.3s ease;
+    }
+    
+    .stat-value.total { color: var(--text-primary); }
+    .stat-value.win { color: var(--success); text-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+    .stat-value.loss { color: var(--destructive); text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+    .stat-value.numwin { color: var(--accent); text-shadow: 0 0 10px rgba(168, 85, 247, 0.5); }
+    .stat-value.rate { color: var(--primary); text-shadow: 0 0 10px rgba(0, 191, 255, 0.5); }
+    
+    /* Chart Section */
+    .chart-section {
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .chart-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    
+    .chart-header svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+    
+    .chart-header span {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    
+    .chart-container {
+      height: 200px;
+      position: relative;
+    }
+    
+    /* Prediction Section */
+    .prediction-section {
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .prediction-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    
+    /* Rainbow Border Container */
+    .bigtext-container {
+      width: 160px;
+      height: 160px;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+    
+    .rainbow-border {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080, #ff0000);
+      background-size: 400% 400%;
+      animation: rainbow 3s ease infinite;
+    }
+    
+    @keyframes rainbow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .bigtext {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 10vw, 4rem);
+      font-weight: 900;
+      background: rgba(12, 25, 41, 0.95);
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .bigtext.big {
+      color: var(--primary);
+      text-shadow: 0 0 30px rgba(0, 191, 255, 0.8);
+    }
+    
+    .bigtext.small {
+      color: var(--secondary);
+      text-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+    }
+    
+    .bigtext.hot {
+      box-shadow: 0 0 60px rgba(34, 197, 94, 0.6);
+    }
+    
+    .bigtext.cold {
+      box-shadow: 0 0 60px rgba(239, 68, 68, 0.6);
+    }
+    
+    .bigtext .inner-bubble {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      animation: riseIn 8s infinite ease-in;
+    }
+    
+    .bigtext .inner-bubble:nth-child(1) { width: 20px; height: 20px; left: 20%; bottom: -20px; animation-duration: 6s; }
+    .bigtext .inner-bubble:nth-child(2) { width: 25px; height: 25px; left: 50%; bottom: -25px; animation-duration: 7s; animation-delay: 1s; }
+    .bigtext .inner-bubble:nth-child(3) { width: 15px; height: 15px; left: 70%; bottom: -15px; animation-duration: 5s; animation-delay: 2s; }
+    
+    @keyframes riseIn {
+      0% { transform: translateY(0) scale(1); opacity: 0.5; }
+      100% { transform: translateY(-180px) scale(1.5); opacity: 0; }
+    }
+    
+    /* Prediction Balls */
+    .ball {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), inset 0 -3px 10px rgba(0, 0, 0, 0.2), inset 0 3px 10px rgba(255, 255, 255, 0.2);
+    }
+    
+    .ball.small { width: 32px; height: 32px; font-size: 0.9rem; }
+    .ball.large { width: 96px; height: 96px; font-size: 2rem; animation: float 3s ease-in-out infinite; }
+    
+    .ball.red { background: radial-gradient(circle at 30% 30%, #ff6b9d, #ff1493, #a0005a); }
+    .ball.green { background: radial-gradient(circle at 30% 30%, #6bd36b, #22c55e, #006600); }
+    .ball.purple { background: radial-gradient(circle at 30% 30%, #c4b5fd, #8b5cf6, #5b21b6); }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* Choice Buttons */
+    .choice-buttons {
+      display: flex;
+      gap: 0;
+      border-radius: 50px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    
+    .choice-buttons button {
+      flex: 1;
+      padding: 16px 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #fff;
+    }
+    
+    .choice-buttons .big-btn {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      border-radius: 50px 0 0 50px;
+    }
+    
+    .choice-buttons .small-btn {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      border-radius: 0 50px 50px 0;
+    }
+    
+    .choice-buttons button:hover {
+      opacity: 0.85;
+      transform: scale(1.02);
+    }
+    
+    .choice-buttons button:active {
+      transform: scale(0.98);
+    }
+    
+    /* History Section */
+    .history-section {
+      padding: 16px;
+    }
+    
+    .history-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    .history-box {
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    
+    .history-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 12px;
+      font-size: 0.8rem;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      margin-bottom: 6px;
+      align-items: center;
+      text-align: center;
+      animation: scaleIn 0.3s ease-out;
+    }
+    
+    .history-row .ball-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .status-pending {
+      color: #ffd700;
+      font-weight: 700;
+      animation: pulse 1.5s infinite;
+    }
+    
+    .status-win {
+      color: var(--success);
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-loss {
+      color: var(--destructive);
+      font-weight: 700;
+      text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+    
+    .num-win-star {
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+    
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    /* ==================== ADMIN PANEL ==================== */
+    .admin-panel { display: none; }
+    
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .admin-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .admin-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .admin-icon svg {
+      width: 24px;
+      height: 24px;
+      color: white;
+    }
+    
+    .admin-title h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    
+    .admin-title p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    
+    .exit-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 50px;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .exit-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .exit-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .generate-section {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+    
+    .generate-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    @media (min-width: 480px) {
+      .generate-form {
+        flex-direction: row;
+        align-items: flex-end;
+      }
+    }
+    
+    .form-group {
+      flex: 1;
+    }
+    
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+    }
+    
+    .generate-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border: none;
+      border-radius: 12px;
+      color: var(--bg-start);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    
+    .generate-btn:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+    
+    .generate-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .generate-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .keys-section {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .keys-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .key-card {
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+      animation: scaleIn 0.3s ease-out;
+    }
+    
+    .key-card.active { border-color: rgba(34, 197, 94, 0.5); }
+    .key-card.inactive { border-color: rgba(239, 68, 68, 0.3); }
+    .key-card.in-use { border-color: rgba(168, 85, 247, 0.5); }
+    
+    .key-card-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    
+    .key-code {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .key-code code {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    
+    .copy-btn {
+      background: none;
+      border: none;
+      padding: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+      border-radius: 6px;
+    }
+    
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+    
+    .copy-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .key-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .action-btn {
+      padding: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .action-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .action-btn.toggle {
+      background: rgba(34, 197, 94, 0.2);
+      color: var(--success);
+    }
+    
+    .action-btn.toggle.inactive {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--destructive);
+    }
+    
+    .action-btn.toggle:hover {
+      background: rgba(34, 197, 94, 0.3);
+    }
+    
+    .action-btn.toggle.inactive:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+    
+    .action-btn.delete {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--destructive);
+    }
+    
+    .action-btn.delete:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+    
+    .key-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    
+    .key-meta .expired {
+      color: var(--destructive);
+    }
+    
+    .key-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.75rem;
+    }
+    
+    .key-status .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .key-status .status-badge.active { color: var(--success); }
+    .key-status .status-badge.inactive { color: var(--destructive); }
+    .key-status .in-use { color: var(--accent); }
+    
+    .key-status svg {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .admin-stats {
+      padding: 24px;
+    }
+    
+    .admin-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+    
+    .admin-stat-item .value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    
+    .admin-stat-item .label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    
+    .admin-stat-item.total .value { color: var(--text-primary); }
+    .admin-stat-item.active .value { color: var(--success); }
+    .admin-stat-item.in-use .value { color: var(--accent); }
+    .admin-stat-item.expired .value { color: var(--destructive); }
+    
+    .empty-state {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 40px 20px;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--destructive); }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 3px; }
+    
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
+  <!-- Animated Bubbles Background -->
   <div class="bubbles">
     <span></span><span></span><span></span><span></span><span></span><span></span>
   </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <!-- ==================== LOGIN PAGE ==================== -->
+  <div id="loginPage" class="login-container">
+    <div class="login-box glass">
+      <div class="login-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+      </div>
+      <h1 class="login-title text-gradient">SHOW V3 UPDTE</h1>
+      <p class="login-subtitle"></p>
+      <form id="loginForm">
+        <div class="input-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <input type="password" id="keyInput" class="login-input" placeholder="ITACHIIXT" autocomplete="off">
+        </div>
+        <div id="loginError" class="login-error"></div>
+        <button type="submit" id="loginBtn" class="login-btn">UNLOCK</button>
+      </form>
+      <p class="login-footer">TELEGRAM USERNAME BY TEAM - ITACHIIXT</p>
+    </div>
+  </div>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <div id="dashboard" class="container dashboard">
+    <header class="header glass">
+      <h1 class="text-gradient">SHADOW - V3</h1>
+      <div class="header-btns">
+        <button class="icon-btn" id="logoutBtn" title="Logout">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+    
+    <div class="top-bar glass">
+      <div class="period-box">PERIOD SHADOW NO - <span id="period">--</span></div>
+      <div class="timer-box" id="timer">60</div>
+    </div>
+
+    <section class="stats-section glass">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">TOTO</span>
+          <span class="stat-value total" id="totalCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">WIN</span>
+          <span class="stat-value win" id="winCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">LOSE</span>
+          <span class="stat-value loss" id="lossCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">JACKPOT</span>
+          <span class="stat-value numwin" id="numWinCount">0</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">WIN RATE</span>
+          <span class="stat-value rate" id="winRate">0.0%</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="chart-section glass">
+      <div class="chart-header">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+          <polyline points="16 7 22 7 22 13"></polyline>
+        </svg>
+        <span>WIN RATE TRENDING</span>
+      </div>
+      <div class="chart-container">
+        <canvas id="winRateChart"></canvas>
+      </div>
+    </section>
+
+    <section class="prediction-section glass">
+      <p class="prediction-label">SHADOW TECHNOLOGY - PLATFOM</p>
+      <div class="bigtext-container">
+        <div class="rainbow-border">
+          <div id="prediction" class="bigtext big">
+            <span class="inner-bubble"></span>
+            <span class="inner-bubble"></span>
+            <span class="inner-bubble"></span>
+            <span class="text">B</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;margin-bottom:20px;">
+        <div id="numberCircle" class="ball large purple">5</div>
+      </div>
+      <div class="choice-buttons">
+        <button class="big-btn">BG NO</button>
+        <button class="small-btn">SM NO</button>
+      </div>
+    </section>
+
+    <section class="history-section glass">
+      <div class="history-header">
+        <div>PERIOD</div>
+        <div>PREDICT</div>
+        <div>JACKPOT</div>
+        <div>RESULT</div>
+        <div>STATUT</div>
+      </div>
+      <div id="historyBox" class="history-box"></div>
+    </section>
+  </div>
+
+  <!-- ==================== ADMIN PANEL ==================== -->
+  <div id="adminPanel" class="container admin-panel">
+    <header class="admin-header glass">
+      <div class="admin-header-left">
+        <div class="admin-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <div class="admin-title">
+          <h1 class="text-gradient">ADMIN PANEL</h1>
+          <p>Key Management System</p>
+        </div>
+      </div>
+      <button class="exit-btn" id="adminExitBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Exit
+      </button>
+    </header>
+
+    <section class="generate-section glass">
+      <h2 class="section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+        </svg>
+        Generate New Key
+      </h2>
+      <div class="generate-form">
+        <div class="form-group">
+          <label for="expirationDays">Expiration (days)</label>
+          <input type="number" id="expirationDays" value="30" min="1">
+        </div>
+        <button class="generate-btn" id="generateKeyBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Generate Key
+        </button>
+      </div>
+    </section>
+
+    <section class="keys-section glass">
+      <h2 class="section-title">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Access Keys (<span id="keysCount">0</span>)
+      </h2>
+      <div class="keys-list" id="keysList"></div>
+    </section>
+
+    <section class="admin-stats glass">
+      <div class="admin-stats-grid">
+        <div class="admin-stat-item total">
+          <div class="value" id="adminTotalKeys">0</div>
+          <div class="label">Total Keys</div>
+        </div>
+        <div class="admin-stat-item active">
+          <div class="value" id="adminActiveKeys">0</div>
+          <div class="label">Active</div>
+        </div>
+        <div class="admin-stat-item in-use">
+          <div class="value" id="adminInUseKeys">0</div>
+          <div class="label">In Use</div>
+        </div>
+        <div class="admin-stat-item expired">
+          <div class="value" id="adminExpiredKeys">0</div>
+          <div class="label">Expired</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<script>
+// ==================== CONFIGURATION ====================
+const ADMIN_KEY = 'MISBAUL781';
+const HISTORY_API = 'https://draw.ar-lottery01.com/WinGo/WinGo_1M/GetHistoryIssuePage.json';
+const KEYS_STORAGE_KEY = 'shadow_access_keys';
+const CURRENT_USER_KEY = 'shadow_current_user';
+
+// ==================== STATE ====================
+let historyData = [];
+let lastSavedPeriod = null;
+let winRateChart = null;
+
+// ==================== UTILITY FUNCTIONS ====================
+function showToast(message, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => {
+    toast.className = 'toast';
+  }, 3000);
+}
+
+function formatDate(dateString) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+}
+
+function isExpired(expiresAt) {
+  return new Date() > new Date(expiresAt);
+}
+
+function generateRandomKey() {
+  const chars = 'ABCDEFGHIJKLMNOPRSTUVWXYZ0123456789';
+  let key = 'SHW';
+  for (let i = 0; i < 12; i++) {
+    if (i > 0 && i % 4 === 0) key += '-';
+    key += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return key;
+}
+
+// ==================== KEY MANAGEMENT ====================
+function getAllKeys() {
+  const stored = localStorage.getItem(KEYS_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+function saveKeys(keys) {
+  localStorage.setItem(KEYS_STORAGE_KEY, JSON.stringify(keys));
+}
+
+function initializeDefaultKey() {
+  const keys = getAllKeys();
+  if (keys.length === 0) {
+    const defaultKey = {
+      key: '',
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+      usedBy: null,
+      isActive: true
+    };
+    saveKeys([defaultKey]);
+  }
+}
+
+function createKey(expiresInDays = 30) {
+  const keys = getAllKeys();
+  const newKey = {
+    key: generateRandomKey(),
+    createdAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString(),
+    usedBy: null,
+    isActive: true
+  };
+  keys.push(newKey);
+  saveKeys(keys);
+  return newKey;
+}
+
+function deleteKey(keyToDelete) {
+  const keys = getAllKeys();
+  const filtered = keys.filter(k => k.key !== keyToDelete);
+  if (filtered.length < keys.length) {
+    saveKeys(filtered);
+    return true;
+  }
+  return false;
+}
+
+function toggleKeyStatus(keyToToggle) {
+  const keys = getAllKeys();
+  const keyIndex = keys.findIndex(k => k.key === keyToToggle);
+  if (keyIndex !== -1) {
+    keys[keyIndex].isActive = !keys[keyIndex].isActive;
+    saveKeys(keys);
+    return true;
+  }
+  return false;
+}
+
+function validateKey(inputKey) {
+  const keys = getAllKeys();
+  const foundKey = keys.find(k => k.key === inputKey.toUpperCase());
+  
+  if (!foundKey) {
+    return { valid: false, message: 'Invalid access key' };
+  }
+  
+  if (!foundKey.isActive) {
+    return { valid: false, message: 'This key has been deactivated' };
+  }
+  
+  if (isExpired(foundKey.expiresAt)) {
+    return { valid: false, message: 'This key has expired' };
+  }
+  
+  const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+  if (foundKey.usedBy && foundKey.usedBy !== currentUser) {
+    return { valid: false, message: 'This key is already in use by another user' };
+  }
+  
+  return { valid: true, message: 'Access granted' };
+}
+
+function loginWithKey(inputKey) {
+  const validation = validateKey(inputKey);
+  
+  if (!validation.valid) {
+    return { success: false, message: validation.message };
+  }
+  
+  const userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  const keys = getAllKeys();
+  const keyIndex = keys.findIndex(k => k.key === inputKey.toUpperCase());
+  if (keyIndex !== -1) {
+    keys[keyIndex].usedBy = userId;
+    saveKeys(keys);
+  }
+  
+  localStorage.setItem(CURRENT_USER_KEY, userId);
+  localStorage.setItem('shadow_logged_in_key', inputKey.toUpperCase());
+  
+  return { success: true, message: 'Login successful' };
+}
+
+function logout() {
+  const loggedInKey = localStorage.getItem('shadow_logged_in_key');
+  const currentUser = localStorage.getItem(CURRENT_USER_KEY);
+  
+  if (loggedInKey && currentUser) {
+    const keys = getAllKeys();
+    const keyIndex = keys.findIndex(k => k.key === loggedInKey);
+    if (keyIndex !== -1 && keys[keyIndex].usedBy === currentUser) {
+      keys[keyIndex].usedBy = null;
+      saveKeys(keys);
+    }
+  }
+  
+  localStorage.removeItem(CURRENT_USER_KEY);
+  localStorage.removeItem('shadow_logged_in_key');
+  localStorage.removeItem('shadow_history');
+  localStorage.removeItem('shadow_prediction');
+  localStorage.removeItem('shadow_last_period');
+}
+
+function isLoggedIn() {
+  const key = localStorage.getItem('shadow_logged_in_key');
+  if (!key) return false;
+  return validateKey(key).valid;
+}
+
+function isAdminKey(key) {
+  return key.toUpperCase() === ADMIN_KEY;
+}
+
+// ==================== TIME & PERIOD ====================to 
+function getIST() {
+  const n = new Date();
+  const u = n.getTime() + n.getTimezoneOffset() * 60000;
+  return new Date(u + 5.5 * 3600000);
+}
+
+function getPeriod() {
+  const ist = getIST();
+  const y = ist.getFullYear();
+  const m = String(ist.getMonth() + 1).padStart(2, '0');
+  const dd = String(ist.getDate()).padStart(2, '0');
+  const minutes = ist.getHours() * 60 + ist.getMinutes();
+  return String(y) + m + dd + "1000" + (10001 + minutes - 330);
+}
+
+function getRemainingSeconds() {
+  const now = getIST();
+  return 60 - now.getSeconds();
+}
+
+// ==================== PREDICTION ENGINE ====================
+function analyzePatterns(history) {
+  const completed = history.filter(h => h.status !== 'PENDING' && h.actualNum !== undefined);
+  
+  let bigCount = 0;
+  let smallCount = 0;
+  let streak = 0;
+  let lastSide = null;
+  
+  for (const entry of completed.slice(0, 10)) {
+    const side = entry.actualNum >= 5 ? 'BIG' : 'SMALL';
+    if (side === 'BIG') bigCount++;
+    else smallCount++;
+    
+    if (lastSide === null) {
+      lastSide = side;
+      streak = 1;
+    } else if (side === lastSide && streak < 10) {
+      streak++;
+    }
+  }
+  
+  return { bigCount, smallCount, streak, lastSide };
+}
+
+function generatePrediction(history = []) {
+  const patterns = analyzePatterns(history);
+  
+  let bigProbability = 0.5;
+  
+  if (patterns.streak >= 3 && patterns.lastSide) {
+    bigProbability = patterns.lastSide === 'BIG' ? 0.35 : 0.65;
+  }
+  
+  const total = patterns.bigCount + patterns.smallCount;
+  if (total > 5) {
+    const bigRatio = patterns.bigCount / total;
+    if (bigRatio > 0.6) bigProbability -= 0.1;
+    else if (bigRatio < 0.4) bigProbability += 0.1;
+  }
+  
+  const randomFactor = (Math.random() - 0.5) * 0.3;
+  bigProbability = Math.max(0.2, Math.min(0.8, bigProbability + randomFactor));
+  
+  const side = Math.random() < bigProbability ? 'BIG' : 'SMALL';
+  
+  const bigNumbers = [5, 6, 7, 8, 9];
+  const smallNumbers = [0, 1, 2, 3, 4];
+  const numbers = side === 'BIG' ? bigNumbers : smallNumbers;
+  
+  const recentNumbers = history
+    .filter(h => h.actualNum !== undefined)
+    .slice(0, 5)
+    .map(h => h.actualNum);
+  
+  const weightedNumbers = numbers.filter(n => !recentNumbers.includes(n));
+  const numberPool = weightedNumbers.length > 0 ? weightedNumbers : numbers;
+  
+  const number = numberPool[Math.floor(Math.random() * numberPool.length)];
+  
+  return { side, number };
+}
+
+function getBallClass(n) {
+  if ([2, 4, 6, 8].includes(n)) return 'red';
+  if ([1, 3, 7, 9].includes(n)) return 'green';
+  return 'purple';
+}
+
+function calculateStreak() {
+  const completed = historyData.filter(h => h.status !== 'PENDING');
+  if (completed.length === 0) return { streak: 0, type: 'none' };
+  
+  const firstStatus = completed[0].status;
+  let streak = 0;
+  
+  for (const item of completed) {
+    if (item.status === firstStatus) streak++;
+    else break;
+  }
+  
+  return { streak, type: firstStatus === 'WIN' ? 'win' : 'loss' };
+}
+
+function getStreakIndicator() {
+  const { streak, type } = calculateStreak();
+  if (streak >= 3 && type === 'win') return 'hot';
+  if (streak >= 3 && type === 'loss') return 'cold';
+  return 'neutral';
+}
+
+// ==================== UI FUNCTIONS ====================
+function updateTimer() {
+  const remaining = getRemainingSeconds();
+  document.getElementById('timer').textContent = String(remaining).padStart(2, '0');
+  document.getElementById('period').textContent = getPeriod().slice(-5);
+}
+
+function updateStats() {
+  const completed = historyData.filter(h => h.status !== 'PENDING');
+  const wins = historyData.filter(h => h.status === 'WIN').length;
+  const losses = historyData.filter(h => h.status === 'LOSS').length;
+  const numWins = historyData.filter(h => h.numberWin === true).length;
+  const total = completed.length;
+  const winRate = total > 0 ? ((wins / total) * 100).toFixed(1) : '0.0';
+
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('winCount').textContent = wins;
+  document.getElementById('lossCount').textContent = losses;
+  document.getElementById('numWinCount').textContent = numWins;
+  document.getElementById('winRate').textContent = winRate + '%';
+}
+
+function updatePredictionUI(side, num) {
+  const pred = document.getElementById('prediction');
+  const streakIndicator = getStreakIndicator();
+  
+  let streakClass = '';
+  if (streakIndicator === 'hot') streakClass = ' hot';
+  else if (streakIndicator === 'cold') streakClass = ' cold';
+  
+  pred.className = `bigtext ${side === 'BIG' ? 'big' : 'small'}${streakClass}`;
+  pred.innerHTML = `
+    <span class="inner-bubble"></span>
+    <span class="inner-bubble"></span>
+    <span class="inner-bubble"></span>
+    <span class="text">${side === 'BIG' ? 'B' : 'S'}</span>
+  `;
+
+  const numberCircle = document.getElementById('numberCircle');
+  numberCircle.textContent = num;
+  numberCircle.className = `ball large ${getBallClass(num)}`;
+}
+
+function renderHistory() {
+  const box = document.getElementById('historyBox');
+  box.innerHTML = '';
+  
+  historyData.slice(0, 20).forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'history-row';
+    
+    const getStatusClass = (status) => {
+      if (status === 'WIN') return 'status-win';
+      if (status === 'LOSS') return 'status-loss';
+      return 'status-pending';
+    };
+    
+    const resultHtml = item.actualNum !== undefined 
+      ? `<div class="ball-container">
+           <div class="ball small ${getBallClass(item.actualNum)}">${item.actualNum}</div>
+           ${item.numberWin ? '<span class="num-win-star">★</span>' : ''}
+         </div>`
+      : '<span style="color:rgba(255,255,255,0.5)">--</span>';
+    
+    row.innerHTML = `
+      <div style="font-family:'Orbitron',sans-serif;font-size:0.75rem;">${item.period.slice(-5)}</div>
+      <div style="font-weight:600;">${item.predicted}</div>
+      <div class="ball-container">
+        <div class="ball small ${getBallClass(item.predictedNum)}">${item.predictedNum}</div>
+      </div>
+      ${resultHtml}
+      <div class="${getStatusClass(item.status)}">${item.status}</div>
+    `;
+    box.appendChild(row);
+  });
+
+  updateStats();
+  updateChart();
+}
+
+// ==================== CHART ====================
+function initChart() {
+  const ctx = document.getElementById('winRateChart').getContext('2d');
+  
+  const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+  gradient.addColorStop(0, 'rgba(0, 191, 255, 0.8)');
+  gradient.addColorStop(1, 'rgba(0, 191, 255, 0.1)');
+  
+  winRateChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Win Rate %',
+        data: [],
+        fill: true,
+        backgroundColor: gradient,
+        borderColor: '#00bfff',
+        borderWidth: 2,
+        tension: 0.4,
+        pointBackgroundColor: '#00bfff',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleColor: '#00bfff',
+          bodyColor: '#fff',
+          borderColor: '#00bfff',
+          borderWidth: 1,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(context) {
+              return `Win Rate: ${context.raw}%`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.1)' },
+          ticks: { color: 'rgba(255, 255, 255, 0.6)', font: { size: 10 } }
+        },
+        y: {
+          min: 0,
+          max: 100,
+          grid: { color: 'rgba(255, 255, 255, 0.1)' },
+          ticks: {
+            color: 'rgba(255, 255, 255, 0.6)',
+            font: { size: 10 },
+            callback: function(value) { return value + '%'; }
+          }
+        }
+      }
+    }
+  });
+}
+
+function updateChart() {
+  if (!winRateChart) return;
+  
+  const completed = historyData.filter(h => h.status !== 'PENDING');
+  if (completed.length === 0) return;
+  
+  const chunkSize = 5;
+  const labels = [];
+  const data = [];
+  
+  for (let i = 0; i < Math.min(completed.length, 50); i += chunkSize) {
+    const chunk = completed.slice(i, i + chunkSize);
+    const wins = chunk.filter(h => h.status === 'WIN').length;
+    const total = chunk.length;
+    const winRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+    
+    labels.unshift(`${Math.floor(i / chunkSize) + 1}`);
+    data.unshift(winRate);
+  }
+  
+  winRateChart.data.labels = labels;
+  winRateChart.data.datasets[0].data = data;
+  winRateChart.update('none');
+}
+
+// ==================== API FUNCTIONS ====================
+async function checkResults() {
+  try {
+    const response = await fetch(HISTORY_API);
+    const data = await response.json();
+    
+    if (data?.data?.list && Array.isArray(data.data.list)) {
+      const results = data.data.list;
+      let updated = false;
+
+      historyData = historyData.map(item => {
+        if (item.status !== 'PENDING') return item;
+        
+        const result = results.find(r => r.issueNumber === item.period);
+        
+        if (result) {
+          const actualNum = parseInt(result.number, 10);
+          const actualSide = actualNum >= 5 ? 'BIG' : 'SMALL';
+          const isWin = item.predicted === actualSide;
+          const numberWin = item.predictedNum === actualNum;
+          updated = true;
+          
+          return { ...item, actualNum, status: isWin ? 'WIN' : 'LOSS', numberWin };
+        }
+        
+        return item;
+      });
+      
+      if (updated) {
+        localStorage.setItem('shadow_history', JSON.stringify(historyData));
+        renderHistory();
+        
+        const savedSide = localStorage.getItem('shadow_side');
+        const savedNum = localStorage.getItem('shadow_num');
+        if (savedSide && savedNum) {
+          updatePredictionUI(savedSide, parseInt(savedNum, 10));
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Failed to fetch results:', error);
+  }
+}
+
+function autoPredict() {
+  const currentPeriod = getPeriod();
+  if (currentPeriod === lastSavedPeriod) return;
+
+  const p = generatePrediction(historyData);
+  updatePredictionUI(p.side, p.number);
+
+  const newEntry = {
+    period: currentPeriod,
+    predicted: p.side,
+    predictedNum: p.number,
+    status: 'PENDING',
+    numberWin: false,
+    timestamp: new Date().toISOString()
+  };
+  
+  historyData.unshift(newEntry);
+  historyData = historyData.slice(0, 50);
+  localStorage.setItem('shadow_history', JSON.stringify(historyData));
+  renderHistory();
+
+  localStorage.setItem('shadow_last_period', currentPeriod);
+  localStorage.setItem('shadow_side', p.side);
+  localStorage.setItem('shadow_num', String(p.number));
+
+  lastSavedPeriod = currentPeriod;
+}
+
+// ==================== ADMIN PANEL ====================
+function renderAdminKeysList() {
+  const keys = getAllKeys();
+  const keysList = document.getElementById('keysList');
+  
+  document.getElementById('keysCount').textContent = keys.length;
+  
+  if (keys.length === 0) {
+    keysList.innerHTML = '<div class="empty-state">No keys generated yet. Create your first access key above.</div>';
+    return;
+  }
+  
+  keysList.innerHTML = keys.map(keyItem => {
+    const expired = isExpired(keyItem.expiresAt);
+    let cardClass = 'key-card';
+    if (!keyItem.isActive || expired) cardClass += ' inactive';
+    else if (keyItem.usedBy) cardClass += ' in-use';
+    else cardClass += ' active';
+    
+    return `
+      <div class="${cardClass}">
+        <div class="key-card-header">
+          <div class="key-code">
+            <code>${keyItem.key}</code>
+            <button class="copy-btn" onclick="copyKey('${keyItem.key}')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="key-actions">
+            <button class="action-btn toggle ${keyItem.isActive ? '' : 'inactive'}" onclick="toggleKey('${keyItem.key}')" title="${keyItem.isActive ? 'Deactivate' : 'Activate'}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                <line x1="12" y1="2" x2="12" y2="12"></line>
+              </svg>
+            </button>
+            <button class="action-btn delete" onclick="removeKey('${keyItem.key}')" title="Delete">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="key-meta">
+          <span>Created: ${formatDate(keyItem.createdAt)}</span>
+          <span class="${expired ? 'expired' : ''}">Expires: ${formatDate(keyItem.expiresAt)}</span>
+        </div>
+        <div class="key-status">
+          ${keyItem.isActive && !expired 
+            ? '<span class="status-badge active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> Active</span>'
+            : `<span class="status-badge inactive"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg> ${expired ? 'Expired' : 'Inactive'}</span>`
+          }
+          ${keyItem.usedBy ? '<span class="in-use">• In Use</span>' : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  updateAdminStats();
+}
+
+function updateAdminStats() {
+  const keys = getAllKeys();
+  document.getElementById('adminTotalKeys').textContent = keys.length;
+  document.getElementById('adminActiveKeys').textContent = keys.filter(k => k.isActive && !isExpired(k.expiresAt)).length;
+  document.getElementById('adminInUseKeys').textContent = keys.filter(k => k.usedBy).length;
+  document.getElementById('adminExpiredKeys').textContent = keys.filter(k => isExpired(k.expiresAt)).length;
+}
+
+function copyKey(key) {
+  navigator.clipboard.writeText(key);
+  showToast('Key copied to clipboard!', 'success');
+}
+
+function toggleKey(key) {
+  if (toggleKeyStatus(key)) {
+    renderAdminKeysList();
+    showToast('Key status updated', 'success');
+  }
+}
+
+function removeKey(key) {
+  if (deleteKey(key)) {
+    renderAdminKeysList();
+    showToast('Key deleted successfully', 'success');
+  }
+}
+
+// ==================== PAGE NAVIGATION ====================
+function showLoginPage() {
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'none';
+}
+
+function showDashboard() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('adminPanel').style.display = 'none';
+  initDashboard();
+}
+
+function showAdminPanel() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+  renderAdminKeysList();
+}
+
+function initDashboard() {
+  const saved = localStorage.getItem('shadow_history');
+  if (saved) historyData = JSON.parse(saved);
+  
+  lastSavedPeriod = localStorage.getItem('shadow_last_period');
+  const savedSide = localStorage.getItem('shadow_side');
+  const savedNum = localStorage.getItem('shadow_num');
+  
+  if (lastSavedPeriod && savedSide && savedNum) {
+    updatePredictionUI(savedSide, parseInt(savedNum, 10));
+  }
+  
+  initChart();
+  renderHistory();
+  
+  setInterval(updateTimer, 1000);
+  setInterval(autoPredict, 1000);
+  setInterval(checkResults, 1000);
+  
+  updateTimer();
+  autoPredict();
+  checkResults();
+}
+
+function checkAuth() {
+  initializeDefaultKey();
+  
+  if (localStorage.getItem('shadow_admin') === 'true') {
+    showAdminPanel();
+  } else if (isLoggedIn()) {
+    showDashboard();
+  } else {
+    showLoginPage();
+  }
+}
+
+// ==================== EVENT LISTENERS ====================
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const key = document.getElementById('keyInput').value.trim().toUpperCase();
+  const btn = document.getElementById('loginBtn');
+  const errorDiv = document.getElementById('loginError');
+  
+  btn.textContent = 'VERIFYING';
+  btn.disabled = true;
+  errorDiv.textContent = '';
+  
+  setTimeout(() => {
+    if (isAdminKey(key)) {
+      localStorage.setItem('shadow_admin', 'true');
+      showAdminPanel();
+      showToast('Welcome, Admin!', 'success');
+    } else {
+      const result = loginWithKey(key);
+      if (result.success) {
+        showDashboard();
+        showToast('Access granted!', 'success');
+      } else {
+        errorDiv.textContent = `* ${result.message.toUpperCase()} *`;
+      }
+    }
+    btn.textContent = 'UNLOCK';
+    btn.disabled = false;
+  }, 500);
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  logout();
+  showLoginPage();
+  showToast('Logged out successfully', 'success');
+});
+
+document.getElementById('adminExitBtn').addEventListener('click', function() {
+  localStorage.removeItem('shadow_admin');
+  showLoginPage();
+});
+
+document.getElementById('generateKeyBtn').addEventListener('click', async function() {
+  const btn = this;
+  const days = parseInt(document.getElementById('expirationDays').value) || 30;
+  
+  btn.disabled = true;
+  btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg> Generating...';
+  
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  const newKey = createKey(days);
+  renderAdminKeysList();
+  showToast(`New key generated: ${newKey.key}`, 'success');
+  
+  btn.disabled = false;
+  btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Generate Key';
+});
+
+// Add spin animation
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+
+// Initialize
+checkAuth();
+</script>
+</body>
+</html>  </div>
 
   <!-- LOGIN PAGE -->
   <div id="loginPage" class="login-container">
